@@ -21,7 +21,6 @@ Make sure you have the following installed:
 
 ### Installation
 Clone the repository:
-bash
 1. Clone the repository
 ```
 git clone https://github.com/lachiestewart/kotlin-chess.git
