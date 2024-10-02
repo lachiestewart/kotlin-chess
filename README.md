@@ -20,12 +20,11 @@ Make sure you have the following installed:
 - JavaFX SDK: Ensure that JavaFX is correctly set up in your development environment.
 
 ### Installation
-Clone the repository:
 1. Clone the repository
 ```
 git clone https://github.com/lachiestewart/kotlin-chess.git
 ```
-2.Open the project in IntelliJ IDEA or any Kotlin-compatible IDE.
+2. Open the project in IntelliJ IDEA or any Kotlin-compatible IDE.
 3. Configure JavaFX by adding the JavaFX SDK to your project.
 4. Run the project from your IDE.
 
