@@ -1,7 +1,7 @@
-Kotlin Chess Game
+# Kotlin Chess Game
 Welcome to my Kotlin Chess Game, a basic implementation of the classic game of chess. This project marks my first time working with Kotlin and serves as a learning project for both Kotlin and JavaFX.
 
-Features
+## Features
 Play a standard game of chess between two players.
 Implemented chess piece movement based on a strategy pattern.
 Basic user interface built using JavaFX.
