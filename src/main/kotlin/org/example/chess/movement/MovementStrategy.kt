@@ -9,10 +9,6 @@ abstract class MovementStrategy {
 
     fun filterMoves(moves: Array<Move>): Array<Move> {
 
-        for (move in moves) {
-            println(move.toString())
-        }
-
         val validMoves = ArrayList<Move>()
 
         for (move in moves) {

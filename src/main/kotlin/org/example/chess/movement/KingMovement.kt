@@ -8,12 +8,20 @@ import org.example.chess.util.Direction
 class KingMovement : MovementStrategy() {
     override fun getMoves(position: Position, boardState: BoardState): Array<Move> {
         val moves = ArrayList<Move>()
+
         for (direction in Direction.entries) {
+            val newPosition = position + direction.position
+
+            if (!newPosition.isValid()) continue
+
             val boardStateCopy = boardState.copy()
             val piece = boardStateCopy.pieceAt(position)!!
-            piece.position += direction.position
-            val newMove = Move(boardStateCopy, piece.position.copy())
-            moves.add(newMove)
+
+            val targetPiece = boardStateCopy.pieceAt(newPosition)
+            if (targetPiece == null || targetPiece.colour != piece.colour) {
+                piece.position = newPosition
+                moves.add(Move(boardStateCopy, newPosition.copy()))
+            }
         }
         return filterMoves(moves.toTypedArray())
     }

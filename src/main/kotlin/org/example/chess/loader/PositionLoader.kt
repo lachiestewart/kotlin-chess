@@ -8,8 +8,6 @@ import org.example.chess.util.PieceType
 
 class PositionLoader {
 
-    private val gameStateDir = "/org/example/chess/game-states"
-
     private val pieceMap: Map<Char, PieceType> = mapOf(
         'p' to PieceType.PAWN,
         'n' to PieceType.KNIGHT,
@@ -22,6 +20,11 @@ class PositionLoader {
     private val colourMap: Map<Boolean, Colour> = mapOf(
         true to Colour.WHITE,
         false to Colour.BLACK,
+    )
+
+    private val turnMap: Map<String, Colour> = mapOf(
+        "w" to Colour.WHITE,
+        "b" to Colour.BLACK,
     )
 
     /**
@@ -47,7 +50,7 @@ class PositionLoader {
      * @return The board state if the game file is found, else null
      */
     fun loadFEN(fileName: String): BoardState {
-        val fenFile = getFileContents("$gameStateDir/$fileName.fen")
+        val fenFile = getFileContents("/org/example/chess/game-states/$fileName.fen")
         val fenInfo = fenFile[0].split(" ")
 
         val pieces = ArrayList<Piece>()
@@ -69,7 +72,7 @@ class PositionLoader {
             }
         }
 
-        val turn = fenInfo[1]
+        val turn = turnMap[fenInfo[1]]!!
         val castlingRights = fenInfo[2]
 
         // not bothering with en passant or move count info atm
@@ -77,7 +80,7 @@ class PositionLoader {
         val halfMovesSinceActiveMove = fenInfo[4].toInt()
         val moveNumber = fenInfo[5].toInt()
 
-        val board = BoardState(true, true, true, true, pieces.toTypedArray(), null)
+        val board = BoardState(true, true, true, true, pieces.toTypedArray(), null, turn)
 
         return board
     }

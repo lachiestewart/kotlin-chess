@@ -66,11 +66,14 @@ class GameController : Controller() {
                     square.children.add(imageView)
                 }
 
-                chessBoard.add(square, col, row)
+                chessBoard.add(square, row, BoardInfo.WIDTH.value - col)
             }
         }
     }
 
+    /**
+     * Deselects all squares on the grid, returning them to their default colours, gray and white
+     */
     private fun deselectAllSquares() {
         squareArray.forEachIndexed { i, row ->
             row.forEachIndexed { j, square ->
@@ -79,6 +82,11 @@ class GameController : Controller() {
         }
     }
 
+    /**
+     * Selects the square at the given position
+     *
+     * @param position - The Position of the square to highlight
+     */
     private fun selectSquare(position: Position) {
         squareArray[position.x][position.y]!!.style = "-fx-background-color: blue;"
     }
@@ -89,12 +97,11 @@ class GameController : Controller() {
      * @param position - The Position of the square clicked
      */
     private fun handleSquareClickAction(position: Position) {
-        println(position)
         deselectAllSquares()
         val piece = boardState.pieceAt(position)
-        if (piece != null) {
+
+        if (piece != null && piece.colour == boardState.turn) {
             for (move in piece.getMoves(boardState)) {
-                println(move.targetPosition)
                 selectSquare(move.targetPosition)
             }
         }

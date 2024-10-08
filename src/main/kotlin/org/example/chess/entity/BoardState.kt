@@ -11,6 +11,7 @@ class BoardState {
     val blackCanCastleQueen: Boolean
     val pieces: Array<Piece>
     var enPassantSquare: Position?
+    var turn: Colour
 
     constructor() {
         whiteCanCastleKing = true
@@ -19,6 +20,7 @@ class BoardState {
         blackCanCastleQueen = true
         pieces = emptyArray()
         enPassantSquare = null
+        turn = Colour.WHITE
     }
 
     constructor(
@@ -27,7 +29,8 @@ class BoardState {
         blackCanCastleKing: Boolean,
         blackCanCastleQueen: Boolean,
         pieces: Array<Piece>,
-        enPassantSquare: Position?
+        enPassantSquare: Position?,
+        turn: Colour
     ) {
         this.whiteCanCastleKing = whiteCanCastleKing
         this.whiteCanCastleQueen = whiteCanCastleQueen
@@ -35,6 +38,7 @@ class BoardState {
         this.blackCanCastleQueen = blackCanCastleQueen
         this.pieces = pieces
         this.enPassantSquare = null
+        this.turn = turn
     }
 
     /**
@@ -65,7 +69,8 @@ class BoardState {
             blackCanCastleKing,
             blackCanCastleQueen,
             piecesCopy,
-            enPassantSquare
+            enPassantSquare,
+            turn
         )
     }
 
