@@ -18,13 +18,13 @@ ext {
     junitVersion = '5.10.2'
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
 application {
     mainModule = 'org.example.chess'
-    mainClass = 'org.example.chess.HelloApplication'
+    mainClass = 'org.example.chess.Main'
 }
 
 kotlin {

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<VBox fx:controller="org.example.chess.controller.MainController" xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER"
+      spacing="10">
+
+    <Text fx:id="actionTarget"/>
+
+    <Button text="Play Button"
+            onAction="#handlePlayButtonAction"/>
+
+    <Button text="Profile Button"
+            onAction="#handleSubmitButtonAction"/>
+
+</VBox>
+

@@ -1,8 +1,27 @@
 package org.example.chess.movement
 
 import org.example.chess.entity.BoardState
+import org.example.chess.entity.Move
 import org.example.chess.entity.Position
 
-interface MovementStrategy {
-    fun getMoves(position: Position, boardState: BoardState): List<BoardState>
+abstract class MovementStrategy {
+    abstract fun getMoves(position: Position, boardState: BoardState): Array<Move>
+
+    fun filterMoves(moves: Array<Move>): Array<Move> {
+
+        for (move in moves) {
+            println(move.toString())
+        }
+
+        val validMoves = ArrayList<Move>()
+
+        for (move in moves) {
+            val isValidBoard = move.boardState.pieces.all { piece -> piece.position.isValid() }
+            if (isValidBoard) {
+                validMoves.add(move)
+            }
+        }
+
+        return validMoves.toTypedArray()
+    }
 }
