@@ -9,7 +9,7 @@ class BoardState {
     val whiteCanCastleQueen: Boolean
     val blackCanCastleKing: Boolean
     val blackCanCastleQueen: Boolean
-    val pieces: Array<Piece>
+    var pieces: Array<Piece>
     var enPassantSquare: Position?
     var turn: Colour
 
@@ -58,6 +58,14 @@ class BoardState {
         return pieces.find { it.position.x == target.x && it.position.y == target.y }
     }
 
+    fun removePiece(piece: Piece) {
+        pieces = pieces.filter { it != piece }.toTypedArray()
+    }
+
+    fun addPiece(piece: Piece) {
+        pieces += piece
+    }
+
     /**
      * Copies this instance of the board state
      */
@@ -75,59 +83,40 @@ class BoardState {
     }
 
     /**
-     * May be redundant
-     * Changes this instance of the board state moves the piece at the "target" position to the "destination" position,
-     * if no piece at the "target" position, nothing will change
-     * @param target - the position of the piece to move
-     * @param destination - the position to move the target piece to
+     * Returns this BoardState as a string in a human-readable format
+     *
+     * @return A string representation of the board
      */
-    fun movePiece(target: Position, destination: Position) {
-        val piece = pieceAt(target)
-        if (piece != null) {
-            piece.position = destination
-        }
-    }
+    override fun toString(): String {
+        val builder = StringBuilder()
 
-    /**
-     * Prints out this BoardState in a human-readable format
-     */
-    fun printBoard() {
         for (i in BoardInfo.HEIGHT.value - 1 downTo 0) {
-            print("${i + 1} ")
+            builder.append("${i + 1} ")
 
             for (j in 0 until BoardInfo.WIDTH.value) {
                 val piece = pieceAt(Position(j, i))
                 val displayChar = when {
                     piece != null -> {
                         when (piece.colour) {
-                            Colour.WHITE -> piece.pieceType.name.first()
-                            Colour.BLACK -> piece.pieceType.name.first().lowercase()
+                            Colour.WHITE -> piece.pieceType.charRepr.uppercase()
+                            Colour.BLACK -> piece.pieceType.charRepr
                         }
                     }
 
                     else -> "."
                 }
-                print("$displayChar ")
+                builder.append("$displayChar ")
             }
-            println()
+            builder.append("\n")
         }
 
-        print("  ")
+        builder.append("  ")
         for (j in 0 until BoardInfo.WIDTH.value) {
-            print("${'a' + j} ")
+            builder.append("${'a' + j} ")
         }
-        println()
-    }
 
-    override fun toString(): String {
-        val pieceString = pieces.joinToString(separator = ",\n") { it.toString() }
-        return """
-            BoardState: {
-                pieces: [
-                    $pieceString
-                ]
-            }
-        """.trimIndent()
+        return builder.toString()
+
     }
 
 }

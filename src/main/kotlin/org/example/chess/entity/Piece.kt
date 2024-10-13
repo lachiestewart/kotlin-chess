@@ -13,12 +13,12 @@ import org.example.chess.util.PieceType
  */
 class Piece(var position: Position, val pieceType: PieceType, val colour: Colour) {
 
-    val movementStrategy: MovementStrategy = pieceType.movementStrategy.constructors.first().call()
+    private val movementStrategy: MovementStrategy = pieceType.movementStrategy.constructors.first().call()
 
     /**
      * Gets an array of possible moves for this piece in the given board state
      *
-     * @param boardState - The states of the board
+     * @param boardState - The state of the board
      * @return The possible moves
      */
     fun getMoves(boardState: BoardState): Array<Move> {
@@ -33,11 +33,11 @@ class Piece(var position: Position, val pieceType: PieceType, val colour: Colour
     override fun toString(): String {
         return """
             Piece: {
-                pieceType: ${pieceType},
-                colour: ${colour},
-                position: ${position}
+                pieceType: $pieceType,
+                colour: $colour,
+                position: $position
             }
-        """
+        """.trimIndent()
     }
 
     /**
@@ -48,7 +48,6 @@ class Piece(var position: Position, val pieceType: PieceType, val colour: Colour
     fun copy(): Piece {
         return Piece(position.copy(), pieceType, colour)
     }
-
 
     /**
      * Gets the name of the file for this piece

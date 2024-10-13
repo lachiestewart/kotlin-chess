@@ -17,22 +17,28 @@ class KnightMovement : MovementStrategy() {
         Position(-1, -2)
     )
 
-    override fun getMoves(position: Position, boardState: BoardState): Array<Move> {
+    override fun getUnfilteredMoves(position: Position, boardState: BoardState): Array<Move> {
         val moves = ArrayList<Move>()
 
         for (move in knightMoves) {
             val newPosition = position + move
+
             if (!newPosition.isValid()) continue
-            val boardStateCopy = boardState.copy()
-            val piece = boardStateCopy.pieceAt(position)!!
-            val targetPiece = boardStateCopy.pieceAt(newPosition)
+
+            val newBoardState = boardState.copy()
+            newBoardState.turn = nextTurn(boardState.turn)
+            val piece = newBoardState.pieceAt(position)!!
+
+            val targetPiece = newBoardState.pieceAt(newPosition)
             if (targetPiece == null || targetPiece.colour != piece.colour) {
                 piece.position = newPosition
-                moves.add(Move(boardStateCopy, newPosition.copy()))
+                if (targetPiece != null) {
+                    newBoardState.removePiece(targetPiece)
+                }
+                moves.add(Move(newBoardState, newPosition.copy()))
             }
         }
-
-        return filterMoves(moves.toTypedArray())
+        return moves.toTypedArray()
     }
 
     override fun toString(): String {

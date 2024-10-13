@@ -8,7 +8,7 @@ import org.example.chess.util.Direction
 
 class PawnMovement : MovementStrategy() {
 
-    override fun getMoves(position: Position, boardState: BoardState): Array<Move> {
+    override fun getUnfilteredMoves(position: Position, boardState: BoardState): Array<Move> {
         val moves = ArrayList<Move>()
 
         val piece = boardState.pieceAt(position)!!
@@ -19,18 +19,27 @@ class PawnMovement : MovementStrategy() {
         }
 
         val oneSquareForward = position + direction
-        if (oneSquareForward.isValid() && boardState.pieceAt(oneSquareForward) == null) {
-            moves.add(Move(boardState.copy(), oneSquareForward.copy()))
+
+        val pieceOneSquareInfront = boardState.pieceAt(oneSquareForward) != null
+        if (oneSquareForward.isValid() && !pieceOneSquareInfront) {
+            val newBoardStateOne = boardState.copy()
+            newBoardStateOne.pieceAt(position)!!.position = oneSquareForward
+            newBoardStateOne.turn = nextTurn(boardState.turn)
+            moves.add(Move(newBoardStateOne, oneSquareForward.copy()))
         }
 
-        val pieceHasMoved = when (piece.colour) {
+        val pawnHasMoved = when (piece.colour) {
             Colour.WHITE -> piece.position.y != 1
             Colour.BLACK -> piece.position.y != 6
         }
 
         val twoSquaresForward = position + direction * 2
-        if (!pieceHasMoved && twoSquaresForward.isValid() && boardState.pieceAt(twoSquaresForward) == null) {
-            moves.add(Move(boardState.copy(), twoSquaresForward.copy()))
+        val pieceTwoSquaresInfront = boardState.pieceAt(twoSquaresForward) != null
+        if (twoSquaresForward.isValid() && !pawnHasMoved && !pieceOneSquareInfront && !pieceTwoSquaresInfront) {
+            val newBoardStateTwo = boardState.copy()
+            newBoardStateTwo.pieceAt(position)!!.position = twoSquaresForward
+            newBoardStateTwo.turn = nextTurn(boardState.turn)
+            moves.add(Move(newBoardStateTwo, twoSquaresForward.copy()))
         }
 
         val captureDirections = arrayOf(
@@ -40,16 +49,24 @@ class PawnMovement : MovementStrategy() {
 
         for (captureDirection in captureDirections) {
             val capturePosition = position + captureDirection
-            if (capturePosition.isValid()) {
-                val targetPiece = boardState.pieceAt(capturePosition)
 
-                if (targetPiece != null && targetPiece.colour != piece.colour) {
-                    moves.add(Move(boardState.copy(), capturePosition.copy()))
-                }
+            val newBoardState = boardState.copy()
+            newBoardState.turn = nextTurn(boardState.turn)
+
+            if (!capturePosition.isValid()) continue
+
+            val targetPiece = newBoardState.pieceAt(capturePosition)
+
+            if (targetPiece != null && targetPiece.colour != piece.colour) {
+                newBoardState.removePiece(targetPiece)
+                newBoardState.pieceAt(position)!!.position = capturePosition
+                moves.add(Move(newBoardState, capturePosition.copy()))
             }
         }
 
-        return filterMoves(moves.toTypedArray())
+        // TODO implement en passant
+
+        return moves.toTypedArray()
     }
 
     override fun toString(): String {

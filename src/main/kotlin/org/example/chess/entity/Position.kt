@@ -31,31 +31,41 @@ class Position(val x: Int, val y: Int) {
     /**
      * Implements addition between two Positions
      *
-     * @param o - The Position to add
-     * @return The addition of this Position and the Position o
+     * @param other - The Position to add
+     * @return The addition of this Position and the other Position
      */
-    operator fun plus(o: Position): Position {
-        return Position(x + o.x, y + o.y)
-    }
-
-    /**
-     * Implements subtraction between two Positions
-     *
-     * @param o - The Position to subtract
-     * @return The result of this position minus the Position o
-     */
-    operator fun minus(o: Position): Position {
-        return Position(x - o.x, y - o.y)
+    operator fun plus(other: Position): Position {
+        return Position(x + other.x, y + other.y)
     }
 
     /**
      * Implements multiplication between an integer and a Position
      *
-     * @param o - The integer with which to multiply the Position
-     * @return The multiplication of this Position's x and y values with the integer o
+     * @param other - The integer with which to multiply the Position
+     * @return The multiplication of this Position's x and y values with the other integer
      */
-    operator fun times(o: Int): Position {
-        return Position(x * o, y * o)
+    operator fun times(other: Int): Position {
+        return Position(x * other, y * other)
+    }
+
+    /**
+     * Overrides the equals method to check if two Position objects are equal
+     *
+     * @param other - The object to compare with
+     * @return true if the other object is a Position with the same x and y values, otherwise false
+     */
+    override fun equals(other: Any?): Boolean {
+        if (other !is Position) return false
+        return x == other.x && y == other.y
+    }
+
+    /**
+     * Overrides the hashCode method to ensure consistent hashing
+     *
+     * @return the hash code of the Position object
+     */
+    override fun hashCode(): Int {
+        return 31 * x + y
     }
 
     /**
@@ -66,4 +76,5 @@ class Position(val x: Int, val y: Int) {
     override fun toString(): String {
         return "($x, $y)"
     }
+
 }

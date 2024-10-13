@@ -10,13 +10,13 @@ import kotlin.reflect.KClass
  * @param value - the relative value of the piece
  * @param movementStrategy - the class to instantiate for the movement strategy
  */
-enum class PieceType(val value: Int, val movementStrategy: KClass<out MovementStrategy>) {
-    PAWN(1, PawnMovement::class),
-    KNIGHT(3, KnightMovement::class),
-    BISHOP(3, BishopMovement::class),
-    ROOK(5, RookMovement::class),
-    QUEEN(9, QueenMovement::class),
-    KING(MAX_VALUE, KingMovement::class);
+enum class PieceType(val value: Int, val movementStrategy: KClass<out MovementStrategy>, val charRepr: Char) {
+    PAWN(1, PawnMovement::class, 'p'),
+    KNIGHT(3, KnightMovement::class, 'n'),
+    BISHOP(3, BishopMovement::class, 'b'),
+    ROOK(5, RookMovement::class, 'r'),
+    QUEEN(9, QueenMovement::class, 'q'),
+    KING(MAX_VALUE, KingMovement::class, 'k');
 
     /**
      * Overrides the default to string method

@@ -6,7 +6,7 @@ import org.example.chess.entity.Position
 import org.example.chess.util.Direction
 
 class BishopMovement : MovementStrategy() {
-    override fun getMoves(position: Position, boardState: BoardState): Array<Move> {
+    override fun getUnfilteredMoves(position: Position, boardState: BoardState): Array<Move> {
         val moves = ArrayList<Move>()
 
         for (direction in Direction.diagonals()) {
@@ -17,24 +17,28 @@ class BishopMovement : MovementStrategy() {
 
                 if (!newPosition.isValid()) break
 
-                val boardStateCopy = boardState.copy()
-                val piece = boardStateCopy.pieceAt(position)!!
+                val newBoardState = boardState.copy()
+                newBoardState.turn = nextTurn(boardState.turn)
+                val piece = newBoardState.pieceAt(position)!!
 
-                val targetPiece = boardStateCopy.pieceAt(newPosition)
+                val targetPiece = newBoardState.pieceAt(newPosition)
                 if (targetPiece == null) {
                     piece.position = newPosition
-                    moves.add(Move(boardStateCopy, newPosition.copy()))
-                } else if (targetPiece.colour != piece.colour) {
-                    piece.position = newPosition
-                    moves.add(Move(boardStateCopy, newPosition.copy()))
-                    break
-                } else {
-                    break
+                    moves.add(Move(newBoardState, newPosition.copy()))
+                    continue
                 }
+
+                if (targetPiece.colour != piece.colour) {
+                    newBoardState.removePiece(targetPiece)
+                    piece.position = newPosition
+                    moves.add(Move(newBoardState, newPosition.copy()))
+                }
+
+                break
             }
         }
 
-        return filterMoves(moves.toTypedArray())
+        return moves.toTypedArray()
     }
 
     override fun toString(): String {

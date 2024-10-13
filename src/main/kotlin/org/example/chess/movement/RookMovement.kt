@@ -6,7 +6,7 @@ import org.example.chess.entity.Position
 import org.example.chess.util.Direction
 
 class RookMovement : MovementStrategy() {
-    override fun getMoves(position: Position, boardState: BoardState): Array<Move> {
+    override fun getUnfilteredMoves(position: Position, boardState: BoardState): Array<Move> {
         val moves = ArrayList<Move>()
 
         for (direction in Direction.straights()) {
@@ -18,24 +18,27 @@ class RookMovement : MovementStrategy() {
                 if (!newPosition.isValid()) break
 
                 val newBoardState = boardState.copy()
+                newBoardState.turn = nextTurn(boardState.turn)
                 val piece = newBoardState.pieceAt(position)!!
 
                 val targetPiece = newBoardState.pieceAt(newPosition)
                 if (targetPiece == null) {
                     piece.position = newPosition
                     moves.add(Move(newBoardState, newPosition.copy()))
-                } else if (targetPiece.colour != piece.colour) {
-                    piece.position = newPosition
-                    moves.add(Move(newBoardState, newPosition.copy()))
-                    break
-                } else {
-                    break
+                    continue
                 }
+
+                if (targetPiece.colour != piece.colour) {
+                    piece.position = newPosition
+                    boardState.removePiece(targetPiece)
+                    moves.add(Move(newBoardState, newPosition.copy()))
+                }
+
+                break
             }
         }
 
-
-        return filterMoves(moves.toTypedArray())
+        return moves.toTypedArray()
     }
 
     override fun toString(): String {

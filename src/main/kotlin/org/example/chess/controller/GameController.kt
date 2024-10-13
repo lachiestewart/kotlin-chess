@@ -20,8 +20,8 @@ class GameController : Controller() {
     lateinit var chessBoard: GridPane
 
     private val colourMap = mapOf(
-        0 to "white",
-        1 to "gray"
+        1 to "white",
+        0 to "gray"
     )
 
     private var squareArray: Array<Array<Pane?>> =
@@ -32,18 +32,14 @@ class GameController : Controller() {
     private var selectedPiece: Piece? = null
 
     /**
-     * Initialises the board with pieces
+     * Initialises the board with pieces and prepares for rendering
      */
     @FXML
     fun initialize() {
 
-        val loader = PositionLoader()
-        boardState = loader.loadFEN("default-board-state")
-
         for (row in 0 until BoardInfo.HEIGHT.value) {
             for (col in 0 until BoardInfo.WIDTH.value) {
                 val position = Position(row, col)
-
                 val square = Pane()
 
                 square.style = "-fx-background-color: ${colourMap[(row + col) % 2]};"
@@ -52,6 +48,27 @@ class GameController : Controller() {
                 square.onMouseClicked = EventHandler { handleSquareClickAction(position) }
 
                 squareArray[row][col] = square
+                chessBoard.add(square, row, BoardInfo.WIDTH.value - col)
+            }
+        }
+
+        val loader = PositionLoader()
+        boardState = loader.loadFEN("default")
+
+        render()
+    }
+
+    /**
+     * Renders the board based on the current boardState.
+     */
+    private fun render() {
+        println(boardState.turn)
+        for (row in 0 until BoardInfo.HEIGHT.value) {
+            for (col in 0 until BoardInfo.WIDTH.value) {
+                val position = Position(row, col)
+                val square = squareArray[row][col]!!
+
+                square.children.clear()
 
                 val piece = boardState.pieceAt(position)
                 if (piece != null) {
@@ -65,8 +82,6 @@ class GameController : Controller() {
 
                     square.children.add(imageView)
                 }
-
-                chessBoard.add(square, row, BoardInfo.WIDTH.value - col)
             }
         }
     }
@@ -98,6 +113,18 @@ class GameController : Controller() {
      */
     private fun handleSquareClickAction(position: Position) {
         deselectAllSquares()
+
+        if (selectedPiece != null) {
+            for (move in selectedPiece!!.getMoves(boardState)) {
+                if (move.targetPosition == position) {
+                    boardState = move.boardState
+                    selectedPiece = null
+                    render()
+                    return
+                }
+            }
+        }
+
         val piece = boardState.pieceAt(position)
 
         if (piece != null && piece.colour == boardState.turn) {
@@ -105,5 +132,7 @@ class GameController : Controller() {
                 selectSquare(move.targetPosition)
             }
         }
+
+        selectedPiece = piece
     }
 }
