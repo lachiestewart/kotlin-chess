@@ -3,9 +3,10 @@ package org.example.chess.util
 /**
  * An enum to handle names of fxml pages
  */
-enum class Page(val pageName: String) {
+enum class Page(private val pageName: String) {
     MAIN("main"),
     GAME("game"),
+    LOGIN("login"),
     PROFILE("profile");
 
     /**

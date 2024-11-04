@@ -58,16 +58,28 @@ class BoardState {
         return pieces.find { it.position.x == target.x && it.position.y == target.y }
     }
 
+    /**
+     * Removes the given Piece from the pieces on the board
+     *
+     * @param piece - The Piece to remove
+     */
     fun removePiece(piece: Piece) {
         pieces = pieces.filter { it != piece }.toTypedArray()
     }
 
+    /**
+     * Adds the given piece to the pieces on the board
+     *
+     * @param piece - The Piece to add
+     */
     fun addPiece(piece: Piece) {
         pieces += piece
     }
 
     /**
      * Copies this instance of the board state
+     *
+     * @return The copied board state
      */
     fun copy(): BoardState {
         val piecesCopy = pieces.map { it.copy() }.toTypedArray()

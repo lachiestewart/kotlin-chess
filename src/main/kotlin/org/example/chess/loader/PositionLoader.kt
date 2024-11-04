@@ -1,5 +1,6 @@
 package org.example.chess.loader
 
+import org.example.chess.Main
 import org.example.chess.entity.BoardState
 import org.example.chess.entity.Piece
 import org.example.chess.entity.Position
@@ -34,10 +35,7 @@ class PositionLoader {
      * @return An array of the file's contents, if the file is not found, an empty array is returned
      */
     private fun getFileContents(fileName: String): Array<String> {
-        val inputStream = this::class.java.getResourceAsStream(fileName)
-        if (inputStream == null) {
-            return emptyArray()
-        }
+        val inputStream = Main::class.java.getResourceAsStream(fileName) ?: return emptyArray()
         return inputStream.bufferedReader().useLines { it.toList() }.toTypedArray()
     }
 

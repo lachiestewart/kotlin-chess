@@ -45,7 +45,16 @@ dependencies {
 
 test {
     useJUnitPlatform()
+
+    filter {
+        includeTestsMatching("org.example.chess.unit.*")
+    }
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
+
 
 jlink {
     imageZip = project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip")

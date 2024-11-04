@@ -14,5 +14,8 @@
     <Button text="Profile Button"
             onAction="#handleSubmitButtonAction"/>
 
+    <Button text="Login Button"
+            onAction="#handleLoginButtonAction"/>
+
 </VBox>
 

@@ -25,4 +25,9 @@ class MainController : Controller() {
         navigateTo(event, Page.GAME)
     }
 
+    @FXML
+    fun handleLoginButtonAction(event: ActionEvent) {
+        navigateTo(event, Page.LOGIN)
+    }
+
 }

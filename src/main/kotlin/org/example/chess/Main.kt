@@ -18,7 +18,7 @@ class Main : Application() {
         val scene = Scene(fxmlLoader.load())
         scene.stylesheets.add(BootstrapFX.bootstrapFXStylesheet())
         stage.title = "Kotlin Chess"
-        val inputStream = this::class.java.getResourceAsStream("/org/example/chess/images/logo.png")
+        val inputStream = Main::class.java.getResourceAsStream("/org/example/chess/images/logo.png")
         val image = Image(inputStream)
         stage.icons.add(image)
         stage.scene = scene

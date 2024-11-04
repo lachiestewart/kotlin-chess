@@ -11,7 +11,7 @@ class ProfileController : Controller() {
     lateinit var actionTarget: Text
 
     @FXML
-    fun handleSubmitButtonAction(event: ActionEvent) {
+    fun handleLoginButtonAction(event: ActionEvent) {
         actionTarget.text = "Sign in button pressed on profile page"
         navigateTo(event, Page.MAIN)
     }

@@ -6,9 +6,8 @@ import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.Pane
-import org.example.chess.entity.BoardState
-import org.example.chess.entity.Piece
-import org.example.chess.entity.Position
+import org.example.chess.Main
+import org.example.chess.entity.*
 import org.example.chess.loader.PositionLoader
 import org.example.chess.util.BoardInfo
 
@@ -24,10 +23,17 @@ class GameController : Controller() {
         0 to "gray"
     )
 
+    private lateinit var defaultBoardState: BoardState
+
     private var squareArray: Array<Array<Pane?>> =
         Array(BoardInfo.HEIGHT.value) { arrayOfNulls(BoardInfo.WIDTH.value) }
 
-    private lateinit var boardState: BoardState
+    private val player1 = User(1, "Jeff", 1000)
+    private val player2 = User(2, "John", 1000)
+
+    private var gameId = 1
+
+    private var game = Game(gameId, player1, player2)
 
     private var selectedPiece: Piece? = null
 
@@ -53,7 +59,11 @@ class GameController : Controller() {
         }
 
         val loader = PositionLoader()
-        boardState = loader.loadFEN("default")
+        val boardState = loader.loadFEN("default")
+
+        defaultBoardState = boardState.copy()
+
+        game.addMove(boardState)
 
         render()
     }
@@ -62,7 +72,6 @@ class GameController : Controller() {
      * Renders the board based on the current boardState.
      */
     private fun render() {
-        println(boardState.turn)
         for (row in 0 until BoardInfo.HEIGHT.value) {
             for (col in 0 until BoardInfo.WIDTH.value) {
                 val position = Position(row, col)
@@ -70,18 +79,18 @@ class GameController : Controller() {
 
                 square.children.clear()
 
-                val piece = boardState.pieceAt(position)
-                if (piece != null) {
-                    val inputStream = this::class.java.getResourceAsStream(piece.getImageFileName())
-                    val image = Image(inputStream)
-                    val imageView = ImageView(image)
+                val piece = game.currentState()!!.pieceAt(position) ?: continue
 
-                    imageView.fitWidth = squareSize
-                    imageView.fitHeight = squareSize
-                    imageView.isPreserveRatio = true
+                val inputStream = Main::class.java.getResourceAsStream(piece.getImageFileName())
+                val image = Image(inputStream)
+                val imageView = ImageView(image)
 
-                    square.children.add(imageView)
-                }
+                imageView.fitWidth = squareSize
+                imageView.fitHeight = squareSize
+                imageView.isPreserveRatio = true
+
+                square.children.add(imageView)
+
             }
         }
     }
@@ -114,10 +123,17 @@ class GameController : Controller() {
     private fun handleSquareClickAction(position: Position) {
         deselectAllSquares()
 
+        val boardState = game.currentState()!!
+
         if (selectedPiece != null) {
             for (move in selectedPiece!!.getMoves(boardState)) {
                 if (move.targetPosition == position) {
-                    boardState = move.boardState
+                    game.addMove(move.boardState)
+                    if (game.isFinished()) {
+                        println("game over")
+                        game = Game(++gameId, player1, player2)
+                        game.addMove(defaultBoardState.copy())
+                    }
                     selectedPiece = null
                     render()
                     return
